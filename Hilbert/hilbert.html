@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+	<script type="text/javascript" src="utils.js"></script>
+	<script type="text/javascript" src="vector_RKn.js"></script>
+	<style type="text/css">
+<style>
+
+.canvas {
+		display: block;
+		position: relative; 
+  top: 10em; 
+  left: 5em; 
+
+	}
+
+
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 20%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+
+<div class="slidecontainer">
+  <input type="range" min="1" max="9" value="3" class="slider" id="myRange">
+  
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+var bFlag = false;
+var slider = document.getElementById("myRange");
+	
+
+var canvas = document.getElementById("canvas"),
+		context = canvas.getContext("2d"),
+		width = canvas.width = window.innerWidth*0.8,
+		height = canvas.height = window.innerHeight*0.8;
+
+
+
+
+slider.oninput = function() {
+
+if (bFlag == false){
+	bFlag = true;
+  get_HL(this.value);
+  context.fillText(bFlag, 10, 100);
+  bFlag = false;
+  }
+  		
+
+}
+
+get_HL(3);
+function get_HL(hl){
+		
+		var vhs = [],
+		vhs10 = [],
+		
+		cpX = width/2,
+		cpY =height/2,
+		vc = vector.create(cpX, cpY),
+		vhs20 = [];
+		context.font = "20px Georgia";
+		
+		Hilbert_Level = hl;
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		context.fillText("Hilbert Level = " + hl, 10, 20);
+
+
+vtm = vector.create(100,300);
+vtt = vector.create(0,0);
+tm33_center = vtt.getT33Matrix(cpX,cpY);
+
+tm33_center0 = vtt.getT33Matrix(-cpX,-cpY);
+scale = 0.5;
+ts33 = vtt.getS33Matrix(scale, scale);
+tr33 = vtt.getR33Matrix(20);	
+
+tr33_90p = vtt.getR33Matrix(90);
+
+tr33_90m = vtt.getR33Matrix(-90);
+
+
+
+ 	Vn = [];
+ 	
+	Vn =get_DrawSquare();
+	var Vn0 = [];
+	drawHS_Canvas(Vn0, "gray");
+
+	pos=40;
+	count_gerade =0;
+	count_ungerade =0;
+	
+	get_HS_levelN(scale, pos, 1);
+	
+	//context.fillText(vhs1.length, 10, 230);
+
+	//print_Varray(vhs1, 10, print_pos);
+	drawHS_Canvas(Vn, "blue");
+
+
+	
+	//----------
+
+	context.fillText("---- Program Ende ---", 5, height-10);
+	
+	
+//---------  Functions
+		
+function copyPoints_in_Array(array, Vpoints){
+	for(var i =0; i < Vpoints.length; i +=1){
+		array.push(Vpoints[i]);
+	}
+	return array;
+
+}
+
+
+
+function get_DrawSquare(){
+	hSquare = utils.get_min_value(width, height)*0.5;		
+	v1 = vector.create(-1, 1);
+	v2 = vector.create(-1, -1);
+	v3 = vector.create(1, -1);
+	v4 = vector.create(1, 1);
+	vhs.push(v1, v2, v3, v4);
+	for(var i=0; i<vhs.length; i +=1){
+			vhs[i].multiplyBy(hSquare);
+	}
+	vhs0 =[];
+	// generate frame
+	for(var i=0; i<vhs.length; i +=1){
+			vt = vhs[i].getM31Matrix(tm33_center);		
+			vhs0.push(vt);
+	}
+	return vhs0;
+}
+
+//--------------------------
+
+function get_HS_levelN(scale, pos =30, hl = 1){
+	
+	//context.fillText(hl, 10, pos );
+
+	if (Vn.length == 4){
+		//context.fillText(Vn.length, 10, 400 );
+		Vn = get_HS_level1(Vn);
+		Vn0 = Vn;
+		if(Hilbert_Level ==1) return;
+	}
+	
+	if( hl==2) Vn = get_HS_level2(Vn, scale);
+	
+	if(hl > 2){
+	Vn = get_HS_level_N(Vn);
+	
+	
+	}
+	if(hl == Hilbert_Level) return;
+	hl +=1;
+	pos +=30;
+	//context.fillText(hl, pos, 30 );
+	get_HS_levelN(scale, pos, hl);
+		
+	
+}
+//---------------------
+
+
+
+
+function get_HS_level1(Vn){
+
+var Vn1 =[];
+		
+		
+		var ts33 = vtt.getS33Matrix(scale, scale);
+		// get HS level 1
+		for(var i=0; i<Vn.length; i +=1){
+			var tsm33_rt = vtt.getM33Matrix(tm33_center, ts33);
+			var tsrm33_rt = vtt.getM33Matrix(tsm33_rt,tr33_90m);
+			var vt = vhs[i].getM31Matrix(tsm33_rt);		
+			Vn1.push(vt);
+		}
+return Vn1;
+}
+
+function get_HS_level2(Vn, scale){
+	var Vn2 =[];
+	ts33 = vtt.getS33Matrix(scale, scale);
+	for(var j=0; j<Vn.length; j +=1){
+			var tm33_px = vtt.getT33Matrix(Vn[j].getX(),Vn[j].getY());
+			for(var i=0; i<Vn.length; i +=1){
+				var V33 = vtt.getM33Matrix(ts33, tm33_center0);
+				if(j==0) V33 =vtt.getM33Matrix(tr33_90p, V33);
+				if(j==3) V33 =vtt.getM33Matrix(tr33_90m, V33);
+				V33 = vtt.getM33Matrix(tm33_px, V33);
+				vt = Vn[i].getM31Matrix(V33);		
+				Vn2.push(vt);
+			}
+		}
+	Vn2 = swap(Vn2, 0);
+	Vn2 = swap(Vn2, 12);
+	//context.fillText("jkjk", 10, 300 );
+	return Vn2;
+}
+
+function get_HS_level_N(Vn){
+
+	var Vn1 =[];
+		//context.fillText(Vn.length , 10, 230 );
+		var ts33 = vtt.getS33Matrix(scale, scale);
+		var t33sc0 = vtt.getM33Matrix(ts33, tm33_center0);
+	  // get HS level n
+		//print_Varray(Vn0, 350);
+		for (var j=0; j< Vn0.length; j+=1){
+			t33_Tx = vtt.getT33Matrix(Vn0[j].getX(), Vn0[j].getY());
+			for(var i=0; i<Vn.length; i +=1){
+			  var t33sc0temp = t33sc0;
+				if(j==0){
+			  t33sc0temp = vtt.getM33Matrix(tr33_90p, t33sc0);
+				}
+				if(j==3){
+			  t33sc0temp = vtt.getM33Matrix(tr33_90m, t33sc0);
+				}
+				t33 = vtt.getM33Matrix(t33_Tx, t33sc0temp);
+				var vt = Vn[i].getM31Matrix(t33);		
+				Vn1.push(vt);
+			}
+		}
+		//context.fillText(Vn1.length , 10, 360 );
+		Vn1 = swap_N_elements(Vn1, 0);
+		Vn1 = swap_N_elements(Vn1, 1);
+		return Vn1;
+}
+//----- draw utils 
+
+function swap_N_elements(vn, start_pos){
+		
+		//context.fillText(vn.length, 10, pos );
+		pos +=30;
+		var vnSwap =[];
+		if (start_pos ==0) start =0; 
+		if (start_pos ==1) start = vn.length - vn.length/4;
+		var nElements = start+ vn.length/4-1;
+		//context.fillText(nElements , 10, pos );
+		
+		for(var i = start; i <= nElements; i += 1){
+			vnSwap.push(vn[i]);
+		}
+		var index = nElements;
+		for(var i = 0; i < vnSwap.length; i += 1){
+			vn[index] = vnSwap[i];
+			index -=1;
+		}
+		return vn;
+
+}
+//-------
+
+function swap(input, start_index) {
+    let temp0 = input[start_index];
+		let temp2 = input[start_index+2];
+ 		input[start_index] = input[start_index+3];
+    input[start_index+2] = input[start_index+1];
+    input[start_index+1] = temp2;
+    input[start_index+3] = temp0;
+    //print_Varray(input, 40);
+    return input;
+}
+
+function drawXY_Canvas(x,y, color = "black", xs = 0, ys = 0) {
+	
+     context.beginPath();
+     context.strokeStyle = color;
+     //context.arc(0, 0, 10, 0, Math.PI * 2, false);
+     
+   	 	context.moveTo(xs,ys);
+   	  context.lineTo(x, y);
+     
+     context.stroke();		
+		}		
+	
+			
+function drawVector_Canvas(v, color = "black") {
+	
+     context.beginPath();
+     context.strokeStyle = color;
+     //context.arc(0, 0, 10, 0, Math.PI * 2, false);
+     
+   	 	context.moveTo(0,0);
+   	  context.lineTo(v.getX(),v.getY());
+     
+     context.stroke();		
+		}		
+				
+							
+function drawHS_Canvas(hsl, color = "black") {
+	
+     context.beginPath();
+     context.strokeStyle = color;
+     //context.arc(0, 0, 10, 0, Math.PI * 2, false);
+     for(var i=0; i< hsl.length; i +=1){
+   	 	if ( i ==0){
+   	 		context.moveTo(hsl[i].getX(), hsl[i].getY());
+   	 	}
+     	else{
+     		context.lineTo(hsl[i].getX(), hsl[i].getY());
+     }
+     }
+     context.stroke();		
+		}	
+
+
+function print_vector(v, yd=20){
+	for(var i=0; i < v.length; i +=1){
+		context.fillText(v[i].getX() +" / " + v[i].getY(), 10, yd);
+    yd +=30;
+    
+  }
+	return yd+30;
+}		
+				
+								
+		
+function print_Varray(va, yd=20){
+	for(var i=0; i < va.length; i +=1){
+		context.fillText(va[i].getX() +" " + va[i].getY(), 10, yd);
+    yd +=30;
+    
+  }
+	return yd+30;
+}
+
+
+
+
+
+
+						
+
+
+}
+
+
+</script>
+
+</body>
+</html>
+

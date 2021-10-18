@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+	<script type="text/javascript" src="support/utils.js"></script>
+	<script type="text/javascript" src="support/vector_RKn.js"></script>
+	<script type="text/javascript" src="support/koch_utils.js"></script>
+	<script type="text/javascript" src="support/display_utils.js"></script>
+	<style type="text/css">
+<style>
+
+.canvas {
+		display: block;
+		position: relative; 
+  top: 10em; 
+  left: 5em; 
+
+	}
+
+
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 20%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+
+<div class="slidecontainer">
+  <input type="range" min="0" max="7" value="0" class="slider" id="myRange">
+  <input type="radio" name="choice" checked value="yes">Dreieck
+  <input type="radio" name="choice" value="no">Viereck
+</div>
+
+   
+
+<canvas id="canvas"></canvas>
+
+<script>
+var slider = document.getElementById("myRange");
+
+var canvas = document.getElementById("canvas"),
+		context = canvas.getContext("2d"),
+		width = canvas.width = window.innerWidth*0.8,
+		height = canvas.height = window.innerHeight*0.8;
+
+context.font = "20px Georgia";
+context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+var vhs = [],
+		cpX = width/2,
+		cpY =height/2,
+		vc = vector.create(-cpX, -cpY),
+		
+
+
+
+Koch_Level = 0;
+kl = 0;
+context.fillText("Koch Level = " + kl, 10, 20);
+
+pos=70;
+
+Flag_Dreieck = true;
+c_l0 =0;
+c_l1 =0;
+c_ln =0;
+
+slider.oninput = function() {
+		 kl = this.value;
+		 
+		 const rbs = document.querySelectorAll('input[name="choice"]');
+            let selectedValue;
+            for (const rb of rbs) {
+                if (rb.checked) {
+                    selectedValue = rb.value;
+                    break;
+                }
+            }
+		 context.clearRect(0, 0, canvas.width, canvas.height);
+		 context.fillText("Koch Level = " + this.value, 10, 20);
+		 if(selectedValue == 'no'){
+		 Flag_Dreieck = false;
+		 }
+		 else{
+		 Flag_Dreieck = true;
+		 }
+		 //context.fillText("check box " + selectedValue, 10, 60); 
+		 get_Koch(Koch_Level);
+}
+get_Koch(Koch_Level);
+//---------------------------------
+
+
+
+
+
+function get_Koch(Koch_Level, vx = []){
+		//context.fillText('current Koch level / kl : ' + Koch_Level + ' / ' + kl, 5, pos+30);
+		//print_Vlist(vx, 100);
+		pos += 30;
+	if(Koch_Level == 0){
+		c_l0 +=1;
+		if(Flag_Dreieck == true){
+			koch_points = Koch_utils.get_DrawDreieck();
+		}
+		else{
+			koch_points = Koch_utils.get_DrawQuadrat();
+		}
+	}
+	if(Koch_Level == 1){
+		c_l1 +=1;
+		//context.fillText('vx array length : ' + vx.length, 5, pos+ 50);
+		koch_points = Koch_utils.cut_Lines(vx);
+	}
+	if(Koch_Level > 1){
+				c_ln +=1;
+			  koch_points = Koch_utils.cut_Lines(vx);
+	}					
+	Koch_Level +=1;
+	if(Koch_Level <= kl){
+		 get_Koch(Koch_Level, koch_points);
+	}
+	color = 'blue';
+	if(Flag_Dreieck){color = 'green';}
+	drawVarray_Canvas(koch_points, color);
+
+
+//------------------------------------------
+
+}
+//context.fillText('c_l0 / c_l1 / c_ln : ' + c_l0 + ' / '+ c_l1 + ' / '+ c_ln, 5, height-50);
+	
+
+
+//--------------------
+	//	Print Aufrufe
+	//		context.fillText("xxxxxx", 5, height-10);
+	//		pos = print_Vector(vtm, 200);	
+	//	pos = print_Vlist(Vline, pos);
+				
+//----------
+
+	
+	
+context.fillText("---- Program Ende ---", 5, height-10);
+	
+
+
+</script>
+
+</body>
+</html>
+
