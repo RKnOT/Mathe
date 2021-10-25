@@ -174,10 +174,15 @@ if __name__ == '__main__':
     
     
     
+    format_two_dez = "{0:.3f}"
+
     
     touren_list.sort(key=lambda x: x.gesamt_strecke_New)
     #d1.Print_List_Gesamtstrecke(touren_list)
-    #print(b)
+    shortes = str(format_two_dez.format(touren_list[0].gesamt_strecke_New))
+    longest = str(format_two_dez.format(touren_list[-1].gesamt_strecke_New))
+    print(shortes)
+    print(longest)
     
     #-------  draw ---------------
     xl =[]
@@ -220,12 +225,12 @@ if __name__ == '__main__':
     
     #plt.figure(figsize=(10, 10))
     
-    plt.plot(xl, yl, color="gray", linewidth = 0.5)
+    plt.plot(xl, yl, color="gray", linewidth = 0.1)
     plt.plot(xl_short, yl_short, color='red', linewidth= 1.5)
     plt.scatter(x_first, y_first, color = 'red', linewidth =5)
     plt.xlabel("X")
     plt.ylabel("Y")
-    plt.title("Red shortest TSP tour")
+    #plt.title("Red shortest TSP tour " , shortes)
     plt.show()
     
     
