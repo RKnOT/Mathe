@@ -5,6 +5,14 @@ import math
 
 import matplotlib.pyplot as plt 
 
+import json
+
+import os.path
+from os import path
+
+
+
+
 
 class Orte:
     
@@ -33,6 +41,31 @@ class Orte:
                 Ort.Name = 'Ort Nr.' + str(count)
                 self.Orte.append(Ort)
                 count +=1
+    
+    def read_json_Ort(self, json_data):
+            #print(data)
+            for i in json_data['ort']:
+                Ort = Orte.Ort_Data()
+                Ort.X = i['X']
+                Ort.Y = i['Y']
+                Ort.Name = i['Name']
+                self.Orte.append(Ort)
+                
+    def write_Orte_in_tuple(self, data):
+        Orte_Tuple = {}
+        Orte_Tuple['ort'] =[]
+        for i in data:
+            #print(i.X)
+            Orte_Tuple['ort'].append({
+            'X': i.X,
+            'Y': i.Y,
+            'Name': i.Name
+            })
+    
+        return Orte_Tuple
+        
+                
+        
             
                 
 class Tour:
@@ -100,13 +133,51 @@ if __name__ == '__main__':
     
     d1 = Debug()
     #----------- Definitionen
-    anzahl_Orte = 15
+    anzahl_Orte = 9
     anzahl_Touren = 50
     anzahl_Iterationen = 100
+    
+    
+    flag_read_json = True
+    
     #----------
     
+    
+    #----------
+    
+    json_Orte = 'TSP_Orte.json'
+
     o = Orte()
-    o.get_YX(anzahl_Orte)
+    if (path.exists(json_Orte) and flag_read_json): # json file mit Orten exsitieren
+        
+        with open(json_Orte) as json_file:
+            data = json.load(json_file)
+            o.read_json_Ort(data)
+        i = data['meta']
+        if i[0]['Anzahl Orte'] != anzahl_Orte or \
+           i[0]['Anzahl Touren'] != anzahl_Touren or \
+           i[0]['Anzahl Iterationen'] != anzahl_Iterationen:
+                 flag_read_json = False
+                 o = Orte() # reset Orte
+                    
+            
+    if flag_read_json == False: # Orte neu generieren und in json file schreiben
+        o.get_YX(anzahl_Orte)
+        O_n = o.write_Orte_in_tuple(o.Orte)
+        
+        O_n['meta'] = []
+        O_n['meta'].append({
+            'Anzahl Orte': anzahl_Orte,
+            'Anzahl Touren': anzahl_Touren,
+            'Anzahl Iterationen': anzahl_Iterationen
+            })
+        with open(json_Orte, 'w') as outfile:
+            json.dump(O_n, outfile)
+        
+        
+    
+    #-----------
+    
     touren_list = []
     
     touren_list = get_touren(touren_list, o.Orte, anzahl_Touren)
