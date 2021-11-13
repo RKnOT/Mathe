@@ -124,4 +124,3 @@ class Vector(object):
     		else:
     			raise e
     		
-    		
