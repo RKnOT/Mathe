@@ -70,6 +70,26 @@ class plot():
 		canvas.set_fill_color(*color)
 		canvas.draw_path()
 
+	def plot_line(self, x, y, color, xt = 0., yt = 0.):
+		canvas.begin_updates()
+		
+		#Calculate scale, set line width and color:
+		canvas.set_stroke_color(*color)
+		canvas.set_line_width(2)
+		#Draw the  line:
+		x_tail = xt * self.scale_x + self.origin_x
+		y_tail = yt * self.scale_y + self.origin_y
+		canvas.move_to(x_tail, y_tail)
+				
+		canvas.add_line(self.origin_x + self.scale_x* x, self.origin_y + self.scale_y* y)
+		
+		canvas.set_fill_color(*color)
+		
+		canvas.draw_path()
+		canvas.fill_ellipse(x_tail -4, y_tail -4, 8, 8)
+    
+		
+		canvas.end_updates()
 
 
 #Set up the canvas size and clear any text output:

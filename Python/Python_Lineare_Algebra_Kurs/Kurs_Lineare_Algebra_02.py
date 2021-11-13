@@ -1,5 +1,5 @@
 import Plot
-import vector_new as V
+import Vector as V
 import Vector_Lines
 import console
 console.clear()

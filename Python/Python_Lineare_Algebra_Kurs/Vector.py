@@ -124,3 +124,7 @@ class Vector(object):
     		else:
     			raise e
     		
+
+v = Vector(['3.183', '-7.627'], 'v')
+w = Vector(['-2.668', '5.319'], 'w')
+print(v.angle_width(w))    		
