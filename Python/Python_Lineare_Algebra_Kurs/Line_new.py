@@ -5,6 +5,31 @@ from vector_new import Vector
 getcontext().prec = 30
 
 
+#  y = 1/2x + 3   y= 0 -> x = -6   x = 0 ->  y = 3
+
+# basepoint (0 / b)   direction vector [1, m]
+# bp = 3  dv [1, 1/2]
+
+# Ax + By = k   y = 0 -> x = k/A   x = 0 ->  y = k/B  
+
+
+
+#  y = mx + b     ->  y - mx = b
+#   Ax + By = k  -> mit k = b  | B = 1 | A = -m
+
+# k = 3 , A =-1/2 , B = 1   ->  -1/2x + y = 3 | *2      
+#||||||||||  -x + 2y = 6 |||||||||||
+
+# mit P1(x1, y1) und P2(x2, y2)
+# y = ((y2-y1) / (x2 -x1)) * x + b -> m = y2 - y1 / x2 - x1
+
+
+# P1(0, 3) P2(-6, 0)
+# m = -3 / -6 -> 1/2 | b = y - mx -> b = 3 - 1/2*0 = 3 oder b = 0 - 1/2*-6 = 3 
+
+
+
+
 class Line(object):
 
     NO_NONZERO_ELTS_FOUND_MSG = 'No nonzero elements found'
@@ -15,11 +40,11 @@ class Line(object):
         if not normal_vector:
             all_zeros = ['0']*self.dimension
             normal_vector = Vector(all_zeros)
-        self.normal_vector = normal_vector
-
+        self.normal_vector = normal_vector 
         if not constant_term:
             constant_term = Decimal('0')
         self.constant_term = Decimal(constant_term)
+        self.basepoint = Decimal('0')
 
         self.set_basepoint()
 
@@ -78,12 +103,13 @@ class Line(object):
             n = self.normal_vector.coordinates
             c = self.constant_term
             basepoint_coords = ['0']*self.dimension
-            
             initial_index = Line.first_nonzero_index(n)
             
             
             initial_coefficient = n[initial_index]
-
+            
+            
+            
             basepoint_coords[initial_index] = c/initial_coefficient
             self.basepoint = Vector(basepoint_coords)
 
@@ -118,7 +144,7 @@ class Line(object):
 
             return output
 
-        n = self.normal_vector
+        n = self.normal_vector.coordinates
 
         try:
             initial_index = Line.first_nonzero_index(n)
@@ -152,18 +178,43 @@ class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):
         return abs(self) < eps
         
-
-
-
-ell1 = Line(normal_vector = Vector(['4.046', '2.836']), constant_term = '1.21')
-
-ell2 = Line(normal_vector = Vector(['10.115', '7.09']), constant_term = '3.025')
-print('intersection 1:', ell1.intersection_with(ell2))
+	#-----------
+class get_chart_line_points():
+	def __init__(self, vh, vt, pl, plot = False, debug = False):
+		#.  Vector:  x = 2 | y = 2 Vector:  x = 4 | y = 8
+		if debug: print(vt, vh)
+		self.gP_min = 0
+		self.gP_max = 0
+		
+		self.geraden_gleichung(vh, vt, pl, plot, debug)
+		
+		
+	def geraden_gleichung(self, vh, vt, pl, plot, debug ):
+		x_min = float(pl.min_x)
+		x_max = float(pl.max_x)
+		y_min = float(pl.min_y)
+		y_max = float(pl.max_y)
+		x1 = float(vt.coordinates[0])
+		y1 = float(vt.coordinates[1])
+		x2 = float(vh.coordinates[0])
+		y2 = float(vh.coordinates[1])
+		yt = y2 - y1
+		xt = x2 - x1
+		if debug: print(yt/xt)
+		m = (yt /xt)
+		b = y1 - m * x1
+		
+		if debug: print(m,b)
+		
+		yl = m*x_min + b
+		yh = m*x_max + b
+		
+		self.gP_min = Vector([x_min, yl])		
+		self.gP_max = Vector([x_max, yh])
+			
+		if debug: print(self.gP_min, self.gP_max)	
+		if plot: pl.plot_line(self.gP_min, (0.8, 0.8, 0.8), self.gP_max)	
+	#-----------
 
 '''
-
-ell1 = Line(normal_vector = Vector(['7.204', '3.182']), constant_term = '8.68')
-
-ell2 = Line(normal_vector = Vector(['8.172', '4.114']), constant_term = '9.883')
-print('intersection 2:', ell1.intersection_with(ell2))
 '''

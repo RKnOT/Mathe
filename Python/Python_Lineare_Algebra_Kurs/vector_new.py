@@ -137,8 +137,24 @@ class Vector(object):
     	cross_product = self.cross(v)
     	return cross_product.magnitude()
     #--------------------------
-import console
-console.clear()
+
+class Point():
+	def __init__(self, x, y, p_name = 'Pxy'):
+		self.x = Decimal(x)
+		self.y =Decimal(y)
+		self.P_Name = p_name
+		#--------
+	def __str__(self):
+		return 'Punkt {}: ({} / {})'.format(self.P_Name, round(self.x, 3), round(self.y,3))
+    #---------
+
+
+
+
+
+
+#import console
+#console.clear()
 
 
 
