@@ -6,36 +6,49 @@ import math
 import matplotlib.pyplot as plt 
 
 import json
-
-import os.path
+from io import BytesIO
+#import os.path
 from os import path
 
 
+# coding: utf-8
+#import matplotlib.pyplot as plt
+import io, math, ui
 
+
+
+
+   
 
 
 class Orte:
     
     class Ort_Data:
-        
-        def __init__(self):
-            self.X = 0.
-            self.Y = 0.
-            self.Name = ''
-            
+    	def __init__(self):
+    		self.X = 0.
+    		self.Y = 0.
+    		self.Name = ''
+    		
     def __init__(self):
-        self.Orte =[]
-        
-        
+    	self.Orte =[]
+    	self.x_min = 0.
+    	self.x_max = 600.
+    	self.y_min = 0.
+    	self.y_max = 415.
+    	self.xy_padding = self.x_max*0.005
+    	#print(self.xy_padding)
+    	
     def rand_gen(self, mi, ma, n=10):
             for i in range(n):
                 yield random.random()*(ma -mi)+mi
 
     def get_YX(self, nrOrte):
             count =1
-            for x in self.rand_gen(0., 1., nrOrte):
+            od = self.Ort_Data()
+            for x in self.rand_gen(self.x_min + self.xy_padding, self.x_max - self.xy_padding, nrOrte+1
+            ):
                 Ort = Orte.Ort_Data()
-                for y in self.rand_gen(0., 1., nrOrte):
+                for y in self.rand_gen(self.y_min+ self.xy_padding, self.y_max- self.xy_padding, nrOrte):
                     Ort.X = x
                     Ort.Y = y
                 Ort.Name = 'Ort Nr.' + str(count)
@@ -133,12 +146,12 @@ if __name__ == '__main__':
     
     d1 = Debug()
     #----------- Definitionen
-    anzahl_Orte = 9
+    anzahl_Orte = 10
     anzahl_Touren = 50
     anzahl_Iterationen = 100
     
     
-    flag_read_json = True
+    flag_read_json = False
     
     #----------
     
@@ -252,8 +265,8 @@ if __name__ == '__main__':
     #d1.Print_List_Gesamtstrecke(touren_list)
     shortes = str(format_two_dez.format(touren_list[0].gesamt_strecke_New))
     longest = str(format_two_dez.format(touren_list[-1].gesamt_strecke_New))
-    print(shortes)
-    print(longest)
+    #print(shortes)
+    #print(longest)
     
     #-------  draw ---------------
     xl =[]
@@ -295,26 +308,90 @@ if __name__ == '__main__':
     
     
     #plt.figure(figsize=(10, 10))
+    #plt.figure(figsize=(3, 3))
+    ort_d = Orte()
     
-    plt.plot(xl, yl, color="gray", linewidth = 0.1)
-    plt.plot(xl_short, yl_short, color='red', linewidth= 1.5)
-    plt.scatter(x_first, y_first, color = 'red', linewidth =5)
-    plt.xlabel("X")
-    plt.ylabel("Y")
+    
+    
+    fig, ax = plt.subplots()
+    #plt.rcParams["figure.figsize"] = [7.50, 3.50]
+    #plt.rcParams["figure.autolayout"] = True
+    #ax.format_coord = lambda x, y: ''
+    ax.imshow(plt.imread("middle-earth-flip.png"))
+    
+    ax.plot(xl, yl, color="green", linewidth = 2)
+    ax.plot(xl_short, yl_short, color='red', linewidth= 3)
+    ax.scatter(x_first, y_first, color = 'black', linewidth = 10)
+    ax.set_axis_off() 
+    plt.xlim(ort_d.x_min - 0.2, ort_d.x_max+ 0.2)
+    plt.ylim(ort_d.y_min - 0.2, ort_d.y_max+ 0.2)
+    #plt.xlim(60)
+    #plt.ylim(41)
+    
+    #plt.xlabel("X")
+    #plt.ylabel("Y")
     #plt.title("Red shortest TSP tour " , shortes)
-    plt.show()
+    #plt.show()
+    #plt.savefig('demo.png', transparent=True)
+    
+    
+    #demo_BlurView()
+    '''
+    a = ui.load_view('TSP_UI')
+    
+    a.add_subview(ui.ImageView(frame=(0, 0, 500, 500)))
+    a.subviews[0].image = ui.Image.named('test:Peppers')
+    a.add_subview(ui.ImageView(frame=(0, 0, 500, 500)))
+    a.subviews[1].image = ui.Image('middle-earth.png')
+    a.present('sheet', hide_title_bar=True)
+ 		'''
+    
+    
+    v = ui.load_view('TSP_UI')
+    v.present('sheet')
+    
+    
+    b = BytesIO()
+    plt.savefig(b)
+    img = ui.Image.from_data(b.getvalue())
     
     
     
     
     
-    #d1.Print_List_Orte(tour_list)
-    #d1.Print_Orte(o.Orte)
-    #d1.Print_Tour(t1)
-    #d1.Print_Tour(t2)
-    #d1.Print_Orte(t1.Orte)
     
     
+    v['image1'].image = img
+    
+    #v.add_subview(plot_to_scrollable_image_view(plt))
+      
+    #v.subviews[0].frame = v.bounds
+    #v.subviews[0].x, v.subviews[0].y=(5,5)
+    #v.content_size=tuple(v.subviews[0].bounds.size+(11,11))
+    #v.content_offset=(1,1)
+    #v.delegate=delegate()
     
     
+    ''' Code snipped original
+    plt.plot([math.sin(x/10.0) for x in range(95)])
+    plt.xlim(0, 94.2)
+    view = plot_to_scrollable_image_view(plt)
+    view.present()
+    view.subviews[0].frame = view.bounds
+    view.subviews[0].x,view.subviews[0].y=(5,5)
+    view.content_size=tuple(view.subviews[0].bounds.size+(11,11))
+    view.content_offset=(5,5)
+    view.delegate=delegate()
+    view.hidden = False
+    ------------------------
+    with ui.ImageContext(100, 100) as ctx:
+    	ui.set_color('white')
+    	ui.fill_rect(0, 0, 100, 100)
+    	ui.set_color('red')
+    	circle = ui.Path.oval(10, 10, 80, 80)
+    	circle.fill()
+    	img = ctx.get_image()
+    7
+    
+    '''
     

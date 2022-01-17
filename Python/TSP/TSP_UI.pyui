@@ -1,0 +1,29 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{205, 128}, {600, 415}}",
+        "class" : "ImageView",
+        "attributes" : {
+          "frame" : "{{268, 207}, {100, 100}}",
+          "class" : "ImageView",
+          "name" : "image1",
+          "uuid" : "EB13505C-349F-44D8-B198-9F9A15B0DBA4"
+        },
+        "selected" : false
+      }
+    ],
+    "frame" : "{{0, 0}, {805, 543}}",
+    "class" : "View",
+    "attributes" : {
+      "enabled" : true,
+      "background_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "flex" : ""
+    },
+    "selected" : false
+  }
+]
