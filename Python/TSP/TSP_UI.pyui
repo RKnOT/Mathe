@@ -9,11 +9,202 @@
         "class" : "ImageView",
         "attributes" : {
           "frame" : "{{268, 207}, {100, 100}}",
+          "background_color" : "RGBA(0.686275,1.000000,0.529412,1.000000)",
           "class" : "ImageView",
           "name" : "image1",
           "uuid" : "EB13505C-349F-44D8-B198-9F9A15B0DBA4"
         },
         "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{24, 27}, {173, 43}}",
+        "class" : "Button",
+        "attributes" : {
+          "action" : "start_tsp",
+          "frame" : "{{363, 256}, {80, 32}}",
+          "title" : "Start TSP",
+          "uuid" : "DA2EEE55-B75C-4935-A931-8DAA0001C973",
+          "class" : "Button",
+          "name" : "StartTSP",
+          "font_size" : 15
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{205, 27}, {594, 93}}",
+        "class" : "TextView",
+        "attributes" : {
+          "flex" : "WH",
+          "name" : "textview1",
+          "editable" : true,
+          "frame" : "{{303, 172}, {200, 200}}",
+          "spellchecking_type" : "default",
+          "class" : "TextView",
+          "uuid" : "92F4A883-851D-4E3E-8B7A-C9365B2F9E75",
+          "alignment" : "left",
+          "autocorrection_type" : "default",
+          "font_size" : 17,
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{24, 82}, {73, 38}}",
+        "class" : "Label",
+        "attributes" : {
+          "name" : "L1",
+          "frame" : "{{328, 256}, {150, 32}}",
+          "uuid" : "1EF83ED9-A6F1-4424-A6F9-F67DA5C9E027",
+          "class" : "Label",
+          "alignment" : "left",
+          "text" : "Nr. Orte",
+          "font_size" : 18,
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{24, 137}, {73, 38}}",
+        "class" : "Label",
+        "attributes" : {
+          "name" : "L2",
+          "frame" : "{{328, 256}, {150, 32}}",
+          "uuid" : "2D0FA09E-277C-48B5-AC42-A59EA66EDD0F",
+          "class" : "Label",
+          "alignment" : "left",
+          "text" : "Nr. Tours",
+          "font_size" : 18,
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{105, 82}, {77, 38}}",
+        "class" : "TextField",
+        "attributes" : {
+          "name" : "nrO",
+          "frame" : "{{303, 256}, {200, 32}}",
+          "spellchecking_type" : "default",
+          "class" : "TextField",
+          "uuid" : "CB7005D6-46F1-4F96-94CC-270D94F6C407",
+          "alignment" : "left",
+          "text" : "10",
+          "autocorrection_type" : "default",
+          "font_size" : 17,
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{105, 137}, {77, 38}}",
+        "class" : "TextField",
+        "attributes" : {
+          "name" : "nrTs",
+          "frame" : "{{303, 256}, {200, 32}}",
+          "spellchecking_type" : "default",
+          "class" : "TextField",
+          "uuid" : "BA7544D8-23D8-40F3-87D7-BB8838DC0F5D",
+          "alignment" : "left",
+          "text" : "20",
+          "autocorrection_type" : "default",
+          "font_size" : 17,
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{105, 183}, {77, 38}}",
+        "class" : "TextField",
+        "attributes" : {
+          "font_name" : "<System>",
+          "frame" : "{{303, 256}, {200, 32}}",
+          "spellchecking_type" : "default",
+          "class" : "TextField",
+          "uuid" : "BA7544D8-23D8-40F3-87D7-BB8838DC0F5D",
+          "alignment" : "left",
+          "text" : "1000",
+          "autocorrection_type" : "default",
+          "name" : "nrLoops",
+          "font_size" : 17
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{24, 183}, {73, 38}}",
+        "class" : "Label",
+        "attributes" : {
+          "font_name" : "<System>",
+          "frame" : "{{328, 256}, {150, 32}}",
+          "uuid" : "2D0FA09E-277C-48B5-AC42-A59EA66EDD0F",
+          "class" : "Label",
+          "alignment" : "left",
+          "text" : "loops",
+          "name" : "L3",
+          "font_size" : 18
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{24, 229}, {73, 38}}",
+        "class" : "Label",
+        "attributes" : {
+          "font_size" : 18,
+          "frame" : "{{328, 256}, {150, 32}}",
+          "uuid" : "2D0FA09E-277C-48B5-AC42-A59EA66EDD0F",
+          "class" : "Label",
+          "alignment" : "left",
+          "text" : "json r\/w",
+          "name" : "L3",
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{105, 229}, {77, 38}}",
+        "class" : "TextField",
+        "attributes" : {
+          "font_size" : 17,
+          "frame" : "{{303, 256}, {200, 32}}",
+          "spellchecking_type" : "default",
+          "class" : "TextField",
+          "uuid" : "BA7544D8-23D8-40F3-87D7-BB8838DC0F5D",
+          "alignment" : "left",
+          "text" : "3",
+          "autocorrection_type" : "default",
+          "name" : "nrJson",
+          "font_name" : "<System>"
+        },
+        "selected" : true
       }
     ],
     "frame" : "{{0, 0}, {805, 543}}",

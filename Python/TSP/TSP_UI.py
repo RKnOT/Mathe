@@ -36,6 +36,7 @@ class Orte:
     	self.y_min = 0.
     	self.y_max = 415.
     	self.xy_padding = self.x_max*0.005
+    	
     	#print(self.xy_padding)
     	
     def rand_gen(self, mi, ma, n=10):
@@ -74,7 +75,6 @@ class Orte:
             'Y': i.Y,
             'Name': i.Name
             })
-    
         return Orte_Tuple
         
                 
@@ -391,7 +391,7 @@ if __name__ == '__main__':
     	circle = ui.Path.oval(10, 10, 80, 80)
     	circle.fill()
     	img = ctx.get_image()
-    7
+    
     
     '''
     

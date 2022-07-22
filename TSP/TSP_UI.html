@@ -1,0 +1,200 @@
+<html>
+  <head>
+    <title>TSP UI</title>
+    
+    
+    <link rel="stylesheet" href="style_tsp.css">
+    <!-- Adding the Fabric JS Library-->
+    <script type="text/javascript" src="fabric.js"></script>
+    <script type="text/javascript" src="java_tsp_utils.js"></script>
+		<script type="text/javascript" src="java_tsp_classes.js"></script>
+        
+    </head>
+
+  <body>
+
+ <script>
+let ut = new Utils();
+ 
+ ut.generate_p_tags();       
+ </script>  
+      
+    <div class="canvas_absolute"><canvas id="canvas"></canvas></div>
+     <!-- 
+
+		-->
+  
+  
+  <div class="defaultTextBox Textbox_pos01" >Anzahl  Staedte: <input type="text" class="tbw" value ="35" id="anzahl_staedte" /><button type="button" class="default_button" id='b1'>Generiere Rundreis </button></div>
+  
+  <div class="defaultTextBox Textbox_pos02">Sigma: <input type="text" class="tbw" value="100" id="sigma">
+  Sigma Reduktion: <input type="text" class="tbw" value="500" id="sigma_reduktion"></div>
+    
+  <div class="defaultTextBox Textbox_pos03">Abbruch n.  <input type="text" class="tbw" value="-1" id="abbruch">
+    stab. Iterationen (-1 deaktivieren)</div>
+  
+  <div class="defaultTextBox Textbox_pos04" ><input type="text" class="tbw" value ="500" id="iteration" /> ms pro Iteration   
+  <button type="button" class="default_button" id="b2" >Tour optimieren</button></div>
+  
+  <div class="defaultTextBox Textbox_pos05" ><button type="button" class="default_button" id="b3" >original Tour</button>
+  <button type="button" class="default_button" id="b4" >current Tour</button>
+  </div>
+  
+   
+   <table class="table table_pos_01" id="tabelle"></table>
+    
+<script>
+
+document.getElementById('b1')
+          .addEventListener('click', first_tour);	
+document.getElementById('b2')
+          .addEventListener('click', optimize);	
+  
+document.getElementById('b3')
+          .addEventListener('click', original_tour);	
+document.getElementById('b4')
+          .addEventListener('click', current_tour);	
+  
+
+
+
+var table_items = {
+	"Sigma": 1,
+	"Iterationen" : 2,
+	"stabile Iterationen" : 3,
+	"Initaldistanz": 4.1,
+	"Finaldistanz": 5.2,
+}
+let ui = new UI_TSP('tabelle', table_items); 	
+
+var paused = false;    
+let h = '';
+
+
+var canvas = ut.generate_canvas_bg_image();
+	
+function up_date_canvas(tour){
+	ut.remove_objects(canvas);
+	ut.draw_tour(tour, canvas);
+	
+}
+function read_UI(){
+ 			var ui_values = new Array();
+ 			var v = ut.getInputValue("anzahl_staedte", 15);           
+			ui_values.push(v);
+			v = ut.getInputValue("sigma", 100);           
+			ui_values.push(v);
+			v = ut.getInputValue("sigma_reduktion", 0.5);           
+			ui_values.push(v);
+			v = ut.getInputValue("abbruch", -1);           
+			ui_values.push(v);
+			v = ut.getInputValue("iteration", 500);           
+			ui_values.push(v);
+		
+			for (const element of ui_values) {
+			 // You can use `let` instead of `const` if you like
+    		document.getElementById("d16").innerHTML = "ui values" + "<br />";
+        	 
+    
+      
+}
+			
+			return ui_values;
+
+}
+
+
+function first_tour(){
+            //ut.clear_d_tag_content();
+           	//ut.remove_objects();
+            //document.getElementById("d16").innerHTML = "generate first tour   " + az  + " Staedte" + "<br />";
+        	  var ui_v = read_UI();
+        	  //var az_staedte = ut.getInputValue("anzahl_staedte", 15);
+        		
+        	  h = new get_Tour(ui_v[0] , 600, 415);
+						h.print_tour('d1');
+						//document.getElementById("d12").innerHTML = "tour  first " + h.tour_first[0]  +  ' / ' + h.tour_first[1] + "<br />";
+						
+						var tsp_len = h.tour_length.toFixed(3);
+        		table_items["Initaldistanz"] = tsp_len  
+						table_items["Finaldistanz"] =  tsp_len;
+        		ui.dic_table_modify(table_items);
+        		
+        		//document.getElementById("d4").innerHTML = "tour   " + h.tour[0]  +  ' / ' + h.tour[1] + "<br />";
+        	  up_date_canvas(h.tour_first);
+        	  
+        		}
+document.getElementById("d10").innerHTML =
+parseFloat(10) + "<br>" +
+parseFloat("10") + "<br>" +
+parseFloat("10.33") + "<br>" +
+parseFloat("34 45 66") + "<br>" +
+parseFloat("He was 40");
+first_tour();
+		
+
+
+function original_tour(){
+	h.print_tour('d1');
+	up_date_canvas(h.tour_first);
+  }    
+
+function tour_optimieren(stab_it = 10){
+	
+	var new_tour = [];
+	new_tour = ut.hard_array_copy(h.tour_n);
+	new_tour = h.change_two_Orte(new_tour);
+	ut.print_points_list(new_tour[1], 'd1');
+	if(new_tour[2] < h.tour_n[2]){
+  	//document.getElementById("d10").innerHTML += "kuerzere tour gefunden   " + "<br />";
+    var tsp_len = new_tour[2].toFixed(3);
+  	table_items["Finaldistanz"] =  tsp_len;
+  	ui.dic_table_modify(table_items);
+  	h.tour_n = ut.hard_array_copy(new_tour);
+  	up_date_canvas(h.tour_n);
+  	}
+	else{
+		var tour_n2 = new Array();
+    tour_n2 = ut.hard_array_copy(new_tour);
+    for(var i=1; i<=stab_it; i++){
+    	//document.getElementById("d10").innerHTML += "laengere tour   " + "<br />";
+    	var tour_n3 = new Array();
+      tour_n3 = h.change_two_Orte(tour_n2);
+			if(tour_n3[2] < h.tour_n[2]){
+				h.tour_n = ut.hard_array_copy(tour_n3); 
+			 	var tsp_len = h.tour_n[2].toFixed(3);
+  		 	table_items["Finaldistanz"] =  tsp_len;
+  		 	ui.dic_table_modify(table_items);
+  			up_date_canvas(h.tour_n);
+  			}
+			 }	
+		}
+}
+//-------------------
+function current_tour(){
+	up_date_canvas(h.tour_n);
+}
+//-------------------
+    
+function optimize(){
+				paused = false;
+        //counter();
+        setInterval(run_interval, 5);
+      }
+
+//-------------------    
+ 						
+function run_interval(){
+//document.getElementById("d1").innerHTML += 'new interval: '+paused+ '<br />';
+       
+	if(!paused){
+	  paused = !paused;
+	  tour_optimieren();
+	  }
+		paused = !paused;
+	
+
+}                  
+        </script>
+  </body>
+</html>
