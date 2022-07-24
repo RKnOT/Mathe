@@ -1,0 +1,81 @@
+ .canvas {} 
+
+.canvas_absolute {
+  position: absolute;
+  top: 20px;
+  left: 300px;
+  width: 600px;
+  height: 415px;
+  border: 3px solid #73AD21;
+}
+  
+  .defaultTextBox {
+    padding: 0;
+    height: 30px;
+    width: 350px;
+    text-align: left;
+    padding-right: 10px;
+    left: 10px;
+    outline: none;
+    border: 1px solid #cdcdcd;
+    border-color: rgba(0,0,0,.15);
+    background-color: white;
+    font-size: 16px;
+}
+  .tbw {
+  width: 50;
+  }
+ 
+ 
+  .Textbox_pos01 {
+  position: absolute;
+  top: 450px;
+  left: 300px;
+  
+}
+.Textbox_pos02 {
+  position: absolute;
+  top: 480px;
+  left: 300px;
+  
+}
+.Textbox_pos03 {
+  position: absolute;
+  top: 510px;
+  left: 300px;
+  
+}
+.Textbox_pos04 {
+  position: absolute;
+  top: 540px;
+  left: 300px;
+  
+}
+.Textbox_pos05 {
+  position: absolute;
+  top: 570px;
+  left: 300px;
+  
+}
+  .default_button{
+  font-size: 16px;
+  }
+
+
+.table,td {
+  border: 1px solid black;
+  border-collapse: collapse;
+	padding: 0.4em;
+	background-color: #F0F0F0;  
+  text-align: left;
+  font-size: 12px;
+}
+
+.table_pos_01{
+  position: absolute;
+  top: 450px;
+  left: 660px;
+  
+  } 
+ 
+
