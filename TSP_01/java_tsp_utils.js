@@ -12,7 +12,9 @@ class Utils{
 					a_copy[1].push([temp_x, temp_y]); // liste der Orte
 					//document.getElementById("d14").innerHTML += "ort  x: " + temp_x  +  ' / ' + 'y: ' + temp_y + "<br />";
 				}
+
 				a_copy[2] = a_original[2]; // länger der tour
+        a_copy[3] = a_original[3]; // länger der tour
 				if(debug_flag == true){
 					document.getElementById("d15").innerHTML = "ort start: x: " + a_copy[0][0][0] +" y: " + a_copy[0][0][1]  + "<br />";
 					document.getElementById("d16").innerHTML = "ort  x:" + a_copy[1][0][0]+ "/ y: " + a_copy[1][0][1]  + "<br />";
@@ -20,6 +22,28 @@ class Utils{
 				}
 				return a_copy;
 				}
+//-----------------------
+  print_x_y_points_list(list_points, desciption = "") {
+    var info = "";
+    var px = list_points[0][0][0];
+    var py = list_points[0][0][1];
+    var o = list_points[0][0][2];
+    info = "--- " + desciption + " ---"  + '<br />';
+    info += o +' /  x: '+ px + ' / y: '+ py + '<br />';
+    info +=  '<br />';
+    for(var i=0, len = list_points[1].length; i<len; i++){
+      px = list_points[1][i][0];
+      py = list_points[1][i][1];
+      o = list_points[1][i][2];
+      info += o + ' /  x: '+ px + ' / y: '+ py + '<br />';
+    }
+    info +=  '<br />';
+    info += 'length: '+ list_points[2]+ '<br />';
+    info += 'List index-n: '+ list_points[3][0] + " / "+ list_points[3][1] + " / "+ list_points[3][2] + '<br />';
+    info +=  '<br />';
+    return info;
+    }
+
 
 //---------------
        print_points_list(list_points, div_id, add_Flag = false) {
@@ -33,15 +57,15 @@ class Utils{
            for(var i=0, len = list_points.length; i<len; i++){
              var px = list_points[i][0];
              var py = list_points[i][1];
-             var ort = list_points[i][2]; 
+             //var ort = list_points[i][2]; 
              if (list_points.length == 2){
                px = list_points[0];
                py = list_points[1];
-               ort = list_points[2]; 
+               //ort = list_points[2]; 
                i++;
                }
              document.getElementById(div_id).innerHTML
-             +=  ort +'  x '+ px + '/ y '+ py + '<br />'
+             += '  x '+ px + '/ y '+ py + '<br />'
              }
             document.getElementById(div_id).innerHTML
              +=  '<br />' 

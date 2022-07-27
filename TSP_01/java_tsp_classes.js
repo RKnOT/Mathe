@@ -12,7 +12,7 @@ class UI_TSP{
 		//----
 		dic_table_modify(dic){
 		 const tabelle = document.getElementById(this.id);	  
-     var dic_array = this.convert_dic_to_array(dic);
+		 var dic_array = this.convert_dic_to_array(dic);
  		 for (var i = 0; i < tabelle.rows.length; i++) {
 		 	var r = tabelle.rows[i];
 		 	var z = r.cells[1];
@@ -71,25 +71,38 @@ class get_Tour{
 		this.generate_first_Tour(this.nr_Orte);
 		   
 		this.tour_first = new Array();
-    this.tour_first[0] = Array.from(this.start_point);
-    this.tour_first[1] = Array.from(this.tour);
-    this.get_tour_length(); 
-    this.tour_first[2] = this.tour_length;
+    	this.tour_first[0] = Array.from(this.start_point);
+		this.tour_first[1] = Array.from(this.tour);
+		this.get_tour_length(); 
+		this.tour_first[2] = this.tour_length;
+		this.tour_first[3] = [0, 0, 0.0]; // index 1, index 2 , tourlength-1
 		
 		this.tour_n = new Array();
-    this.tour_n[0] = Array.from(this.start_point);
-    this.tour_n[1] = Array.from(this.tour);
-    this.tour_n[2] = this.tour_length;
+		this.tour_n[0] = Array.from(this.start_point);
+		this.tour_n[1] = Array.from(this.tour);
+		this.tour_n[2] = this.tour_length;
+		this.tour_n[3] = [0, 0, 0.0]; // index 1, index 2 , tourlength-1
 		
 		}
   	//--------------
-    get_random_points(nr_points, dez_stellen = 5){
+
+	pad(number) {
+		var temp = number;
+		if (number < 10) {
+			temp = '00' + number;
+		  } else if (number < 100) {
+			temp = '0' + number;
+		  } 
+		return temp;
+   }
+    get_random_points(nr_points, ort_counter = 1, dez_stellen = 5){
           var points = [];
-          var ort_counter = 1;
+          
+		 
           for(var i=0, len = nr_points; i<len; i++){
            var x = this.ut.generateRandomFloat(0, this.c_width, dez_stellen);
            var y = this.ut.generateRandomFloat(0, this.c_height, dez_stellen);
-           var ort_n = "Ort: " + ort_counter.toString(3);
+           var ort_n = "Ort: " + this.pad(ort_counter);
            points.push([x,y, ort_n]);
            ort_counter +=1;
            }
@@ -97,7 +110,7 @@ class get_Tour{
           }
     //-------------
     generate_first_Tour(nr_points = 5){
-				 var r_p = this.get_random_points(nr_points);
+		 var r_p = this.get_random_points(nr_points);
          var r_p_0 = r_p[0];
          r_p.splice(0,1);
          this.tour = r_p;
@@ -111,37 +124,40 @@ class get_Tour{
 					tour[1] = this.get_tour_length(tour[0], false);
 					return tour;
 					}
-    //-------------
-    change_two_Orte(orte_list){
-          var t = new Array();
-          let ot = this.ut.hard_array_copy(orte_list); // hard copy of array
-          //let ot = orte_list.map((x) => x); 
-          var min = 0;
-          var max = ot[1].length;
-					var index1 =  this.ut.generateRandomIntegerInRange(min, max);   
-					var index2 =  this.ut.generateRandomIntegerInRange(min, max);
-					if (index1 == index2){
-					   var index2 =  this.ut.generateRandomIntegerInRange(min, max);
-					   }
-					 //document.getElementById("d3").innerHTML ="max: "+ max + " indexes " + index1 + ' ' + index2+ ' ' +"<br />";
-					  				
-					
-					
-					var temp1 = ot[1][index1];
-					var temp2 = ot[1][index2];
-					//document.getElementById("d4").innerHTML ="value index1: "+ temp + ' ' +"<br />";
-					ot[1].splice(index2, 1, temp1); 
-					ot[1].splice(index1, 1, temp2); 
-					t[0] = ot[0];
-					t[1] = ot[1];
-					t[2] = this.get_tour_length(ot, false);
-					this.ut.print_points_list(t[1], 'd1');
-					return t; 
-					
-					
-				
-    }
-    
+     //-------------
+		change_two_Orte(orte_list){
+			var min = 0;
+			var max = orte_list[1].length;
+					  var index1 =  this.ut.generateRandomIntegerInRange(min, max);   
+					  var index2 =  this.ut.generateRandomIntegerInRange(min, max);
+					  if (index1 == index2 ){
+						 var index2 =  this.ut.generateRandomIntegerInRange(min, max);
+						 }
+					//document.getElementById("d3").innerHTML ="max: "+ max + " indexes " + index1 + ' ' + index2+ ' ' +"<br />";
+					  var temp1 = orte_list[1][index1];
+					  var temp2 = orte_list[1][index2];
+					  //document.getElementById("d4").innerHTML ="value index1: "+ temp + ' ' +"<br />";
+					  orte_list[1].splice(index2, 1, temp1); 
+					  orte_list[1].splice(index1, 1, temp2); 
+					  orte_list[3] = [index1, index2, orte_list[2]];
+					  orte_list[2] = this.get_tour_length(orte_list, false);
+					 // this.ut.print_points_list(orte_list[1], 'd1');
+					}
+	//---------------
+	change_back_two_Orte(orte_list){
+		if (orte_list[3][0] != 0){
+			var index1 = orte_list[3][0];
+			var index2 = orte_list[3][1];
+			var v1 = orte_list[1][index1];
+			var v2 = orte_list[1][index2];
+			orte_list[1][index1] = v2;
+			orte_list[1][index2] = v1;
+			orte_list[2] = this.get_tour_length(orte_list, false);
+			orte_list[3] = [0,0,0];
+			
+		} //  zwei orte zurücktauschen
+		
+	}
     //---------------
     print_tour(tag){
       this.ut.print_points_list(this.start_point, tag);

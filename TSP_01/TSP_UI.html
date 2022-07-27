@@ -45,16 +45,13 @@ let ut = new Utils();
     
 <script>
 
-document.getElementById('b1')
-          .addEventListener('click', first_tour);	
-document.getElementById('b2')
-          .addEventListener('click', optimize);	
-  
-document.getElementById('b3')
-          .addEventListener('click', original_tour);	
-document.getElementById('b4')
-          .addEventListener('click', current_tour);	
-  
+document.getElementById('b1').addEventListener('click', first_tour);	
+document.getElementById('b2').addEventListener('click', optimize);	
+document.getElementById('b3').addEventListener('click', original_tour);	
+document.getElementById('b4').addEventListener('click', ortliste_change_back); 
+		  
+		 
+		 
 
 
 
@@ -74,7 +71,7 @@ var table_items = {
 let ui = new UI_TSP('tabelle', table_items, 10); 	
 
 var paused = false;    
-let h = '';
+let h = new Object();
 var intervalID =0;    
 
 var canvas = ut.generate_canvas_bg_image();
@@ -84,6 +81,10 @@ function up_date_canvas(tour){
 	ut.draw_tour(tour, canvas);
 	
 }
+
+
+
+
 function read_UI(){
  			table_items['Sigma_input'] = ut.getInputValue("sigma", 100);
  			table_items['Sigma'] = table_items['Sigma_input'];
@@ -104,11 +105,10 @@ function first_tour(){
         	  //var az_staedte = ut.getInputValue("anzahl_staedte", 15);
         		
         	  h = new get_Tour(table_items['Anzahl_Staedte_input'] , 600, 415);
-						h.print_tour('d1');
+			 //h.print_tour('d1');
+			 //document.getElementById("d12").innerHTML = "tour  first " + h.tour_first[0]  +  ' / ' + h.tour_first[1] + "<br />";
 						
-						//document.getElementById("d12").innerHTML = "tour  first " + h.tour_first[0]  +  ' / ' + h.tour_first[1] + "<br />";
-						
-						var tsp_len = h.tour_length.toFixed(3);
+			 var tsp_len = h.tour_length.toFixed(3);
         		table_items["Initaldistanz"] = tsp_len  
 						table_items["Finaldistanz"] =  tsp_len;
         		ui.dic_table_modify(table_items);
@@ -118,10 +118,22 @@ function first_tour(){
         	  
         		}
 first_tour();
+
+
+function ortliste_change_back(){
+	document.getElementById("d5").innerHTML = ut.print_x_y_points_list(h.tour_n,  "original");
+	h.change_two_Orte(h.tour_n);
+	document.getElementById("d5").innerHTML += ut.print_x_y_points_list(h.tour_n,  "zwei orte getauscht");
+	//ut.print_x_y_points_list(h.tour_n, "d11", "2 Orte vert."); 
+	h.change_back_two_Orte(h.tour_n);
+	document.getElementById("d5").innerHTML += ut.print_x_y_points_list(h.tour_n,  "zwei orte zurück getauscht");
 		
+}		
 
 
 function original_tour(){
+	
+	
 	h.print_tour('d1');
 	up_date_canvas(h.tour_first);
   }    
@@ -132,7 +144,7 @@ function tour_optimieren(){
 	var new_tour = [];
 	new_tour = ut.hard_array_copy(h.tour_n);
 	new_tour = h.change_two_Orte(new_tour);
-	ut.print_points_list(new_tour[1], 'd1');
+	//ut.print_points_list(new_tour[1], 'd1');
 	if(new_tour[2] < h.tour_n[2]){
   	table_items['Iterationen'] +=1;
   	//document.getElementById("d10").innerHTML += "kuerzere tour gefunden   " + "<br />";
